@@ -741,64 +741,64 @@ library SafeERC20 {
     }
 }
 
-interface IsKLIMA {
+interface IsGreener {
     function index() external view returns ( uint );
 }
 
-contract wsKLIMA is ERC20 {
+contract wsGreener is ERC20 {
     using SafeERC20 for ERC20;
     using Address for address;
     using SafeMath for uint;
 
-    address public immutable sKLIMA;
+    address public immutable sGreener;
 
-    constructor( address _sKLIMA ) ERC20( 'Wrapped sKLIMA', 'wsKLIMA' ) {
-        require( _sKLIMA != address(0) );
-        sKLIMA = _sKLIMA;
+    constructor( address _sGreener ) ERC20( 'Wrapped sGreener', 'wsGreener' ) {
+        require( _sGreener != address(0) );
+        sGreener = _sGreener;
     }
 
     /**
-        @notice wrap sKLIMA
+        @notice wrap sGreener
         @param _amount uint
         @return uint
      */
     function wrap( uint _amount ) external returns ( uint ) {
-        IERC20( sKLIMA ).transferFrom( msg.sender, address(this), _amount );
+        IERC20( sGreener ).transferFrom( msg.sender, address(this), _amount );
 
-        uint value = sKLIMATowKLIMA( _amount );
+        uint value = sGreenerTowsGreener( _amount );
         _mint( msg.sender, value );
         return value;
     }
 
     /**
-        @notice unwrap sKLIMA
+        @notice unwrap sGreener
         @param _amount uint
         @return uint
      */
     function unwrap( uint _amount ) external returns ( uint ) {
         _burn( msg.sender, _amount );
 
-        uint value = wKLIMATosKLIMA( _amount );
-        IERC20( sKLIMA ).transfer( msg.sender, value );
+        uint value = wsGreenerTosGreener( _amount );
+        IERC20( sGreener ).transfer( msg.sender, value );
         return value;
     }
 
     /**
-        @notice converts wKLIMA amount to sKLIMA
+        @notice converts wsGreener amount to sGreener
         @param _amount uint
         @return uint
      */
-    function wKLIMATosKLIMA( uint _amount ) public view returns ( uint ) {
-        return _amount.mul( IsKLIMA( sKLIMA ).index() ).div( 10 ** decimals() );
+    function wsGreenerTosGreener( uint _amount ) public view returns ( uint ) {
+        return _amount.mul( IsGreener( sGreener ).index() ).div( 10 ** decimals() );
     }
 
     /**
-        @notice converts sKLIMA amount to wKLIMA
+        @notice converts sGreener amount to wsGreener
         @param _amount uint
         @return uint
      */
-    function sKLIMATowKLIMA( uint _amount ) public view returns ( uint ) {
-        return _amount.mul( 10 ** decimals() ).div( IsKLIMA( sKLIMA ).index() );
+    function sGreenerTowsGreener( uint _amount ) public view returns ( uint ) {
+        return _amount.mul( 10 ** decimals() ).div( IsGreener( sGreener ).index() );
     }
 
 }
